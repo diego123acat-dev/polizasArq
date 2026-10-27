@@ -1,7 +1,6 @@
 package mx.edu.uacm.is.slt.as.IDSISTEMA.services;
 
-
-import models.Beneficiario;
+import mx.edu.uacm.is.slt.as.IDSISTEMA.Beneficiario; // Importación correcta de tu modelo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -12,44 +11,34 @@ import java.util.Map;
 @Service
 public class BeneficiarioService {
 
-    // Guardamos los beneficiarios asociados a una clave de póliza
+    // Simulamos una base de datos temporal agrupada por CURP o clave
     private final Map<String, List<Beneficiario>> baseDatosBeneficiarios = new HashMap<>();
 
     @Autowired
     private PolizaService polizaService;
 
-    public String registrarBeneficiario(String clavePoliza, String nombres, String apellidos, int porcentaje) {
-        // Validar que la póliza exista
-        if (polizaService.consultarPoliza(clavePoliza) == null) {
+    public String registrarBeneficiario(String clavePoliza, String curp, String nombres, String primerApellido, String segundoApellido, String direccion) {
+        // Validar que la póliza exista (según tu lógica de negocio)
+        if (polizaService != null && polizaService.consultarPoliza(clavePoliza) == null) {
             return "Error: La póliza " + clavePoliza + " no existe.";
         }
 
-        Beneficiario nuevoBeneficiario = new Beneficiario(clavePoliza, nombres, apellidos, porcentaje);
+        // Creamos el beneficiario usando los atributos reales de tu modelo
+        Beneficiario nuevoBeneficiario = new Beneficiario(curp, nombres, primerApellido, segundoApellido, direccion, null);
         
         baseDatosBeneficiarios.putIfAbsent(clavePoliza, new ArrayList<>());
-        
-        // Validar que los porcentajes no sumen más de 100%
-        int sumaActual = 0;
-        for (Beneficiario b : baseDatosBeneficiarios.get(clavePoliza)) {
-            sumaActual += b.getPorcentaje();
-        }
-        
-        if (sumaActual + porcentaje > 100) {
-            return "Error: La suma de porcentajes de los beneficiarios superaría el 100%.";
-        }
-
         baseDatosBeneficiarios.get(clavePoliza).add(nuevoBeneficiario);
-        return "Beneficiario " + nombres + " agregado a la póliza " + clavePoliza;
+
+        return "Beneficiario " + nombres + " " + primerApellido + " agregado correctamente a la póliza " + clavePoliza;
     }
 
     public List<Beneficiario> consultarBeneficiarios(String clavePoliza) {
         return baseDatosBeneficiarios.getOrDefault(clavePoliza, new ArrayList<>());
     }
 
-    public void eliminarBeneficiario(String clavePoliza, String nombreCompleto) {
+    public void eliminarBeneficiario(String clavePoliza, String curp) {
         if (baseDatosBeneficiarios.containsKey(clavePoliza)) {
-            baseDatosBeneficiarios.get(clavePoliza).removeIf(b -> b.getNombreCompleto().equalsIgnoreCase(nombreCompleto));
+            baseDatosBeneficiarios.get(clavePoliza).removeIf(b -> b.getCurp().equalsIgnoreCase(curp));
         }
     }
 }
-

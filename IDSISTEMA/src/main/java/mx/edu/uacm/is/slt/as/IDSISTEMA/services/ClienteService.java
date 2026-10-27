@@ -1,6 +1,6 @@
 package mx.edu.uacm.is.slt.as.IDSISTEMA.services;
 
-import models.Cliente;
+import mx.edu.uacm.is.slt.as.IDSISTEMA.Cliente; // Importación correcta de tu modelo
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,16 +12,17 @@ public class ClienteService {
     // Simulamos una "base de datos" en memoria usando un Mapa
     private final Map<String, Cliente> baseDatosClientes = new HashMap<>();
 
-    public String registrarCliente(String curp, String nombres, String apellidos, String direccion, Date fechaNacimiento) {
+    public String registrarCliente(String curp, String nombres, String primerApellido, String segundoApellido, String direccion, Date fechaNacimiento) {
         if (baseDatosClientes.containsKey(curp)) {
             return "Error: El cliente con CURP " + curp + " ya está registrado.";
         }
         
-        Cliente nuevoCliente = new Cliente(curp, nombres, apellidos, direccion, fechaNacimiento);
+        // Usamos el constructor con los atributos exactos de tu entidad Cliente.java
+        Cliente nuevoCliente = new Cliente(curp, nombres, primerApellido, segundoApellido, direccion, fechaNacimiento);
         baseDatosClientes.put(curp, nuevoCliente);
         
-        // Aquí en un futuro se haría la petición POST al Sistema Dueño
-        return "Cliente " + nombres + " registrado exitosamente en el sistema local.";
+        // Aquí en un futuro se haría la petición al Sistema Dueño
+        return "Cliente " + nombres + " " + primerApellido + " registrado exitosamente en el sistema local.";
     }
 
     public String modificarCliente(String curp, String nuevaDireccion) {
