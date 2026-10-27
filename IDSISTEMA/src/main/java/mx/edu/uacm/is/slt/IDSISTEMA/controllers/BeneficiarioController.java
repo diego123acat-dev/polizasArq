@@ -1,6 +1,6 @@
 package mx.edu.uacm.is.slt.IDSISTEMA.controllers;
-
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/beneficiarios")
@@ -8,19 +8,20 @@ public class BeneficiarioController {
 
     @PostMapping("/registrar")
     public String registrarBeneficiario(
-            @RequestParam String clavePoliza,
+            @RequestParam String curp,
             @RequestParam String nombres,
-            @RequestParam String apellidos,
-            @RequestParam int porcentaje) {
+            @RequestParam String primerApellido,
+            @RequestParam String segundoApellido,
+            @RequestParam String direccion,
+            @RequestParam LocalDate fechaNacimiento) {
         
-        return "Simulación: Beneficiario " + nombres + " " + apellidos + " agregado a la póliza " + clavePoliza + " con " + porcentaje + "%";
+        return "Simulación: Beneficiario " + nombres + " " + primerApellido + " con CURP " + curp + " registrado correctamente.";
     }
 
-    @DeleteMapping("/eliminar/{clavePoliza}/{nombre}")
+    @DeleteMapping("/eliminar/{curp}")
     public String eliminarBeneficiario(
-            @PathVariable String clavePoliza,
-            @PathVariable String nombre) {
+            @PathVariable String curp) {
         
-        return "Simulación: Beneficiario " + nombre + " eliminado de la póliza " + clavePoliza;
+        return "Simulación: Beneficiario con CURP " + curp + " eliminado correctamente.";
     }
 }

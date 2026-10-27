@@ -7,15 +7,22 @@ import java.util.Date;
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
+    @GetMapping("/")
+    public String inicioClientes() {
+        return "Módulo de Clientes activo - Interfaz de muestra del Sistema Intermediario de Pólizas.";
+    }
+
+    
     @PostMapping("/registrar")
     public String registrarCliente(
             @RequestParam String curp,
             @RequestParam String nombres,
-            @RequestParam String apellidos,
+            @RequestParam String primerApellido,
+            @RequestParam String segundoApellido,
             @RequestParam String direccion,
             @RequestParam Date fechaNacimiento) {
         
-        return "Simulación: Cliente con CURP " + curp + " registrado correctamente.";
+        return "Simulación: Cliente " + nombres + " " + primerApellido + " con CURP " + curp + " registrado correctamente.";
     }
 
     @PutMapping("/modificar/{curp}")
