@@ -35,7 +35,7 @@ public class Beneficiario {
         this.curp = curp;
         this.nombres = nombres;
         this.primerApellido = primerApellido;
-        this.segundoApellido = segundoapellido;
+        this.segundoApellido = segundoApellido;
         this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
     }
