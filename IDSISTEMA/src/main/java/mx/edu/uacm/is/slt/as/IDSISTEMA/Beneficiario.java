@@ -11,7 +11,10 @@ public class Beneficiario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 18, unique = true)
+    @Column(name = "clave_poliza", nullable = false)
+    private String clavePoliza;
+
+    @Column(nullable = false, length = 18)
     private String curp;
 
     @Column(nullable = false)
@@ -28,20 +31,41 @@ public class Beneficiario {
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
+    @Column(nullable = false)
+    private double porcentaje;
+
     public Beneficiario() {
     }
 
-    public Beneficiario(String curp, String nombres, String primerApellido, String segundoApellido, String direccion, LocalDate fechaNacimiento) {
+    public Beneficiario(String curp, String nombres, String primerApellido,
+                        String segundoApellido, String direccion, LocalDate fechaNacimiento) {
         this.curp = curp;
         this.nombres = nombres;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
         this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
+        this.porcentaje = 0.0;
+    }
+
+    public Beneficiario(String clavePoliza, String curp, String nombres,
+                        String primerApellido, String segundoApellido,
+                        String direccion, LocalDate fechaNacimiento, double porcentaje) {
+        this.clavePoliza = clavePoliza;
+        this.curp = curp;
+        this.nombres = nombres;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
+        this.direccion = direccion;
+        this.fechaNacimiento = fechaNacimiento;
+        this.porcentaje = porcentaje;
     }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getClavePoliza() { return clavePoliza; }
+    public void setClavePoliza(String clavePoliza) { this.clavePoliza = clavePoliza; }
 
     public String getCurp() { return curp; }
     public void setCurp(String curp) { this.curp = curp; }
@@ -60,4 +84,7 @@ public class Beneficiario {
 
     public LocalDate getFechaNacimiento() { return fechaNacimiento; }
     public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+
+    public double getPorcentaje() { return porcentaje; }
+    public void setPorcentaje(double porcentaje) { this.porcentaje = porcentaje; }
 }
