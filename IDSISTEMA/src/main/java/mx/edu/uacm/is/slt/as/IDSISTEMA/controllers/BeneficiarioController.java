@@ -36,7 +36,7 @@ public class BeneficiarioController {
                 clavePoliza, curp, nombres, primerApellido, segundoApellido, direccion, fechaNacimiento
         );
     }
-
+//---
     @DeleteMapping("/eliminar/{curp}")
     public String eliminarBeneficiario(@PathVariable String curp) {
         return beneficiarioService.eliminarBeneficiario(curp);
