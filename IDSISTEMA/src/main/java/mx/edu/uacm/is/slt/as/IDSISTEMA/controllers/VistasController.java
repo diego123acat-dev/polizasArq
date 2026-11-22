@@ -489,7 +489,7 @@
          System.out.println(mensaje);
          System.out.println("==============================================================");
      }
-//-----
+
      private void mostrarErrorCritico(String mensaje) {
          System.out.println("\n==============================================================");
          System.out.println("[ERROR CRÍTICO]: " + mensaje);

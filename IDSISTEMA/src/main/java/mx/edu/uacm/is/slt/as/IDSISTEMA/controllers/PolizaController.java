@@ -42,7 +42,7 @@ public class PolizaController {
 
         return polizaService.modificarPoliza(clave, monto, descripcion);
     }
-//----
+
     @DeleteMapping("/baja/{clave}")
     public String darDeBajaPoliza(@PathVariable String clave) {
         return polizaService.darDeBajaPoliza(clave);

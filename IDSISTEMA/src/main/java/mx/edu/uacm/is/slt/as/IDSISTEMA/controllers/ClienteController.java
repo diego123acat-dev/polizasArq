@@ -45,7 +45,7 @@ public class ClienteController {
                 curp, nombres, primerApellido, segundoApellido, direccion, fechaNacimiento
         );
     }
-//cambio para push
+
     @PutMapping("/modificar/{curp}")
     public String modificarCliente(
             @PathVariable String curp,
