@@ -22,6 +22,16 @@ public class ClienteController {
         return "Módulo de Clientes activo - Sistema Intermediario de Pólizas.";
     }
 
+    @GetMapping("/consultar/{curp}")
+    public Cliente consultarCliente(@PathVariable String curp) {
+        return clienteService.consultarCliente(curp);
+    }
+
+    @GetMapping("/consultar")
+    public List<Cliente> consultarClientes() {
+        return clienteService.consultarClientes();
+    }
+
     @PostMapping("/registrar")
     public String registrarCliente(
             @RequestParam String curp,
@@ -42,15 +52,5 @@ public class ClienteController {
             @RequestParam String direccion) {
 
         return clienteService.modificarCliente(curp, direccion);
-    }
-
-    @GetMapping("/consultar/{curp}")
-    public Cliente consultarCliente(@PathVariable String curp) {
-        return clienteService.consultarCliente(curp);
-    }
-
-    @GetMapping("/consultar")
-    public List<Cliente> consultarClientes() {
-        return clienteService.consultarClientes();
     }
 }

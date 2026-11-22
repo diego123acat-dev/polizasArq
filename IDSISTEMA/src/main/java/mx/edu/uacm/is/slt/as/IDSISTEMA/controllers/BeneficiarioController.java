@@ -2,6 +2,7 @@ package mx.edu.uacm.is.slt.as.IDSISTEMA.controllers;
 
 import mx.edu.uacm.is.slt.as.IDSISTEMA.Beneficiario;
 import mx.edu.uacm.is.slt.as.IDSISTEMA.services.BeneficiarioService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,24 +17,24 @@ public class BeneficiarioController {
         this.beneficiarioService = beneficiarioService;
     }
 
+    @GetMapping("/consultar")
+    public List<Beneficiario> consultarBeneficiarios() {
+        return beneficiarioService.consultarBeneficiarios();
+    }
+
     @PostMapping("/registrar")
     public String registrarBeneficiario(
-            @RequestParam(required = false, defaultValue = "") String clavePoliza,
+            @RequestParam String clavePoliza,
             @RequestParam String curp,
             @RequestParam String nombres,
             @RequestParam String primerApellido,
             @RequestParam(required = false, defaultValue = "") String segundoApellido,
             @RequestParam(required = false, defaultValue = "") String direccion,
-            @RequestParam(required = false) LocalDate fechaNacimiento) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaNacimiento) {
 
         return beneficiarioService.registrarBeneficiario(
                 clavePoliza, curp, nombres, primerApellido, segundoApellido, direccion, fechaNacimiento
         );
-    }
-
-    @GetMapping("/consultar")
-    public List<Beneficiario> consultarBeneficiarios() {
-        return beneficiarioService.consultarBeneficiarios();
     }
 
     @DeleteMapping("/eliminar/{curp}")
