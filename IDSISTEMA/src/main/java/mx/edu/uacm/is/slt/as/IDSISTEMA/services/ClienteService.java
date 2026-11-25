@@ -1,43 +1,96 @@
 package mx.edu.uacm.is.slt.as.IDSISTEMA.services;
 
-import mx.edu.uacm.is.slt.as.IDSISTEMA.Cliente; // Importación correcta de tu modelo
+import mx.edu.uacm.is.slt.as.IDSISTEMA.Cliente;
+import mx.edu.uacm.is.slt.as.IDSISTEMA.ClienteRepository;
 import org.springframework.stereotype.Service;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClienteService {
 
-    // Simulamos una "base de datos" en memoria usando un Mapa
-    private final Map<String, Cliente> baseDatosClientes = new HashMap<>();
+    private final ClienteRepository clienteRepository;
 
-    public String registrarCliente(String curp, String nombres, String primerApellido, String segundoApellido, String direccion, Date fechaNacimiento) {
-        if (baseDatosClientes.containsKey(curp)) {
-            return "Error: El cliente con CURP " + curp + " ya está registrado.";
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+    }
+
+    public String registrarCliente(String curp, String nombres, String primerApellido,
+                                   String segundoApellido, String direccion, Date fechaNacimiento) {
+        try {
+            if (curp == null || curp.isBlank() || nombres == null || nombres.isBlank()
+                    || primerApellido == null || primerApellido.isBlank()) {
+                return "[ERROR DE VALIDACIÓN]: CURP, nombres y primer apellido son obligatorios.";
+            }
+
+            String curpNormalizada = curp.trim().toUpperCase();
+            if (clienteRepository.existsById(curpNormalizada)) {
+                return "[EX-CYR]: El cliente con CURP " + curpNormalizada + " ya está registrado.";
+            }
+
+            Cliente nuevoCliente = new Cliente(
+                    curpNormalizada, nombres.trim(), primerApellido.trim(),
+                    segundoApellido != null ? segundoApellido.trim() : "",
+                    direccion != null ? direccion.trim() : "",
+                    fechaNacimiento
+            );
+            clienteRepository.save(nuevoCliente);
+            return "[ÉXITO]: Cliente " + nombres.trim() + " " + primerApellido.trim() + " registrado correctamente.";
+        } catch (Exception ex) {
+            return "[EX-DND]: No fue posible completar el registro del cliente (" + ex.getMessage() + ").";
         }
-        
-        // Usamos el constructor con los atributos exactos de tu entidad Cliente.java
-        Cliente nuevoCliente = new Cliente(curp, nombres, primerApellido, segundoApellido, direccion, fechaNacimiento);
-        baseDatosClientes.put(curp, nuevoCliente);
-        
-        // Aquí en un futuro se haría la petición al Sistema Dueño
-        return "Cliente " + nombres + " " + primerApellido + " registrado exitosamente en el sistema local.";
     }
 
     public String modificarCliente(String curp, String nuevaDireccion) {
-        if (!baseDatosClientes.containsKey(curp)) {
-            return "Error: Cliente no encontrado.";
+        return modificarCliente(curp, null, null, null, nuevaDireccion, null);
+    }
+
+    public String modificarCliente(String curp, String nombres, String primerApellido,
+                                   String segundoApellido, String nuevaDireccion, Date fechaNacimiento) {
+        try {
+            if (curp == null || curp.isBlank()) {
+                return "[ERROR DE VALIDACIÓN]: Debe indicar la CURP del cliente.";
+            }
+
+            String curpNormalizada = curp.trim().toUpperCase();
+            Optional<Cliente> encontrado = clienteRepository.findById(curpNormalizada);
+            if (encontrado.isEmpty()) {
+                return "[ALERTA]: No existe un cliente registrado con la CURP " + curpNormalizada + ".";
+            }
+
+            Cliente cliente = encontrado.get();
+            if (nombres != null && !nombres.isBlank()) {
+                cliente.setNombres(nombres.trim());
+            }
+            if (primerApellido != null && !primerApellido.isBlank()) {
+                cliente.setPrimerApellido(primerApellido.trim());
+            }
+            if (segundoApellido != null) {
+                cliente.setSegundoApellido(segundoApellido.trim());
+            }
+            if (nuevaDireccion != null && !nuevaDireccion.isBlank()) {
+                cliente.setDireccion(nuevaDireccion.trim());
+            }
+            if (fechaNacimiento != null) {
+                cliente.setFechaNacimiento(fechaNacimiento);
+            }
+
+            clienteRepository.save(cliente);
+            return "[ÉXITO]: Datos del cliente " + curpNormalizada + " actualizados correctamente.";
+        } catch (Exception ex) {
+            return "[EX-DND]: No fue posible modificar al cliente (" + ex.getMessage() + ").";
         }
-        
-        Cliente cliente = baseDatosClientes.get(curp);
-        cliente.setDireccion(nuevaDireccion);
-        
-        return "Dirección del cliente " + curp + " actualizada a: " + nuevaDireccion;
     }
 
     public Cliente consultarCliente(String curp) {
-        // Para el GET, la práctica pide consultar al Sistema Dueño, pero por ahora lo sacamos de memoria
-        return baseDatosClientes.get(curp);
+        if (curp == null || curp.isBlank()) {
+            return null;
+        }
+        return clienteRepository.findById(curp.trim().toUpperCase()).orElse(null);
+    }
+
+    public List<Cliente> consultarClientes() {
+        return clienteRepository.findAll();
     }
 }
