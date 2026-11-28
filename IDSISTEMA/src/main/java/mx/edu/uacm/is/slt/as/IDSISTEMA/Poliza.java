@@ -1,3 +1,4 @@
+
 package mx.edu.uacm.is.slt.as.IDSISTEMA;
 
 import jakarta.persistence.Column;
@@ -69,3 +70,4 @@ public class Poliza {
         this.descripcion = descripcion;
     }
 }
+
